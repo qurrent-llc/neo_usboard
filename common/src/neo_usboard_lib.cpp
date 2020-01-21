@@ -694,6 +694,13 @@ void neo_usboard_node::PublishUSBoardData()
             //publish data for first USrange sensor
             topicPub_USRangeSensor16.publish(USRange16Msg);
         }
+        //int current_time = ros::Time::now();
+        //if (last_data_received_time > 0)
+        //{
+        //   usBoard.data_latency = (current_time - last_data_received_time) * 0.000001;
+        //}
+        //usBoard.timed_out = false;
+        //last_data_received_time = current_time.tonsec();
         //------------------------------------------------------------------------------------------------------------
 }
 
