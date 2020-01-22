@@ -98,7 +98,6 @@ int neo_usboard_node::init()
     else
     {
         //ROS_ERROR("FAILED: Could not opened USboard at ComPort = %s", m_sComPort.c_str());
-        //usBoard.timed_out = false;
         return 1;
     }
 
