@@ -82,6 +82,7 @@ class neo_usboard_node
         // Constructor
         neo_usboard_node()
         {
+            first_setup = false;
             usboard_available = false;
             usboard_online = false;
             usboard_timeout_ = 0.5;
@@ -95,6 +96,7 @@ class neo_usboard_node
 
 
         void PublishUSBoardData();
+        void PublishStatusMessage();
         int readUSBoardData();
 
 
@@ -107,20 +109,20 @@ class neo_usboard_node
 
         void readParameter();
         double getRequestRate();
+        int last_data_received_time;
 
 
 	private:
 
         std::string m_sComPort;
         SerUSBoard * m_SerUSBoard;
-
+        bool first_setup;
         double requestRate;
         double usboard_timeout_;
 
         ros::Time time_last_message_received_;
         bool usboard_online; //the usboard is sending messages at regular time
         bool usboard_available; //the usboard has sent at least one message -> publish topic
-        int last_data_received_time;
         bool m_bUSBoardSensorActive[16];
 
         //log
