@@ -46,12 +46,6 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "neo_usboard_node");
     neo_usboard_node node;
     ros::Rate r1(1); //Frequency of publishing States
-    if (node.init() != 0)
-    {
-        ROS_INFO("USBoard not found!");
-        return 1;
-    }
-/*
     while (node.init() != 0 && node.n.ok()) 
     {
         node.PublishStatusMessage();
@@ -61,12 +55,12 @@ int main(int argc, char** argv)
     {
         return 0;
     }
-*/
+
     double requestRate = node.getRequestRate();
     ros::Rate r(requestRate); //Frequency of publishing States
 
-    node.requestBoardStatus();
-    node.requestActivateChannels();
+    //node.requestBoardStatus();
+    //node.requestActivateChannels();
 
     while(node.n.ok())
     {

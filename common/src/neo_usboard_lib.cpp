@@ -89,7 +89,6 @@ int neo_usboard_node::init()
 
     bool bInitSerUSBoardRet = false;
     bInitSerUSBoardRet = m_SerUSBoard->init(m_sComPort.c_str());
-    topicPub_usBoard = n.advertise<neo_msgs::USBoard>("/USBoard/Measurements",1);
 
     if(bInitSerUSBoardRet)
     {
@@ -120,6 +119,7 @@ int neo_usboard_node::init()
      *
      *
     ************************************************************************/
+    topicPub_usBoard = n.advertise<neo_msgs::USBoard>("/USBoard/Measurements",1);
 
     if(m_bUSBoardSensorActive[0])topicPub_USRangeSensor1 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor1",1);
     if(m_bUSBoardSensorActive[1])topicPub_USRangeSensor2 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor2",1);
@@ -350,7 +350,14 @@ void neo_usboard_node::PublishUSBoardData()
         for(int i=0; i<4; i++) usBoard.analog[i] = iUSAnalog[i];
 
         //Publish raw data in neo_msgs::USBoard format
+
         topicPub_usBoard.publish(usBoard);
+        if (last_data_received_time > 0)
+        {
+           usBoard.data_latency = (ros::Time::now().nsec - last_data_received_time) * 0.000001;
+        }
+        usBoard.timed_out = false;
+        last_data_received_time = ros::Time::now().nsec;
 
         //Additionally publish data in ROS sensor_msgs::Range format
         //-------------------------------------------SENSOR1--------------------------------------------------------
@@ -716,13 +723,6 @@ void neo_usboard_node::PublishUSBoardData()
             //publish data for first USrange sensor
             topicPub_USRangeSensor16.publish(USRange16Msg);
         }
-        //int current_time = ros::Time::now();
-        //if (last_data_received_time > 0)
-        //{
-        //   usBoard.data_latency = (current_time - last_data_received_time) * 0.000001;
-        //}
-        //usBoard.timed_out = false;
-        //last_data_received_time = current_time.tonsec();
         //------------------------------------------------------------------------------------------------------------
 }
 
