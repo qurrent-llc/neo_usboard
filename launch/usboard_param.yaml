@@ -9,7 +9,7 @@
 ##########################
 #    device parameter    #
 ##########################
-ComPort: /dev/ttyUSB0
+ComPort: /dev/ttyUSBBoard
 usboard_timeout_: 0.5
 requestRate: 5
 log: false
