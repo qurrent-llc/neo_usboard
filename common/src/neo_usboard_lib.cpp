@@ -40,18 +40,18 @@
 #include <../include/neo_usboard_node.h>
 
 
+
 int neo_usboard_node::init()
 {
 
     /************************************************************************
      * Read Parameter from ROS Parameter-Server
     ************************************************************************/
-    //ROS_INFO("Loading Parameter from ROS-Parameter-Server");
-    if(first_setup == false && n.hasParam("ComPort"))
+    ROS_INFO("Loading Parameter from ROS-Parameter-Server");
+    if(n.hasParam("ComPort"))
 	{
         n.getParam("ComPort", m_sComPort);
         ROS_INFO("Loaded ComPort parameter from parameter server: %s",m_sComPort.c_str());
-        first_setup = true;
 	}
 
     n.param("message_timeout", usboard_timeout_, 2.0);
@@ -96,7 +96,7 @@ int neo_usboard_node::init()
     }
     else
     {
-        //ROS_ERROR("FAILED: Could not opened USboard at ComPort = %s", m_sComPort.c_str());
+        ROS_ERROR("FAILED: Could not opened USboard at ComPort = %s", m_sComPort.c_str());
         return 1;
     }
 
@@ -119,6 +119,7 @@ int neo_usboard_node::init()
      *
      *
     ************************************************************************/
+
     topicPub_usBoard = n.advertise<neo_msgs::USBoard>("/USBoard/Measurements",1);
 
     if(m_bUSBoardSensorActive[0])topicPub_USRangeSensor1 = n.advertise<sensor_msgs::Range>("/USBoard/Sensor1",1);
@@ -300,29 +301,6 @@ int neo_usboard_node::requestAnalogreadings()
 
 //--------------------------------------------------------------------------------
 
-void neo_usboard_node::PublishStatusMessage()
-{
-		//if(!usboard_available == 1) return;
-
-		neo_msgs::USBoard usBoard;
-        usBoard.timed_out = true;
-
-        //Publish raw data in neo_msgs::USBoard format
-        topicPub_usBoard.publish(usBoard);
-
-
-        //int current_time = ros::Time::now();
-        //if (last_data_received_time > 0)
-        //{
-        //   usBoard.data_latency = (current_time - last_data_received_time) * 0.000001;
-        //}
-        //usBoard.timed_out = false;
-        last_data_received_time = ros::Time::now().nsec;
-        //------------------------------------------------------------------------------------------------------------
-}
-
-//--------------------------------------------------------------------------------
-
 void neo_usboard_node::PublishUSBoardData()
 {
 		if(!usboard_available == 1) return;
@@ -350,14 +328,7 @@ void neo_usboard_node::PublishUSBoardData()
         for(int i=0; i<4; i++) usBoard.analog[i] = iUSAnalog[i];
 
         //Publish raw data in neo_msgs::USBoard format
-
         topicPub_usBoard.publish(usBoard);
-        if (last_data_received_time > 0)
-        {
-           usBoard.data_latency = (ros::Time::now().nsec - last_data_received_time) * 0.000001;
-        }
-        usBoard.timed_out = false;
-        last_data_received_time = ros::Time::now().nsec;
 
         //Additionally publish data in ROS sensor_msgs::Range format
         //-------------------------------------------SENSOR1--------------------------------------------------------

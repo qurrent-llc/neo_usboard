@@ -159,8 +159,8 @@ int SerialIO::openIO()
 	if(m_Device < 0)
 	{	
 		//RF_ERR("Open " << m_DeviceName << " failed, error code " << errno);
-		//std::cout << "Trying to open " << m_DeviceName << " failed: "
-		//	<< strerror(errno) << " (Error code " << errno << ")";
+		std::cout << "Trying to open " << m_DeviceName << " failed: "
+			<< strerror(errno) << " (Error code " << errno << ")";
 
 		return -1;
 	}

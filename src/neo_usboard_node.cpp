@@ -45,17 +45,7 @@ int main(int argc, char** argv)
     // initialize ROS
     ros::init(argc, argv, "neo_usboard_node");
     neo_usboard_node node;
-    ros::Rate r1(1); //Frequency of publishing States
-    while (node.init() != 0 && node.n.ok()) 
-    {
-        node.PublishStatusMessage();
-        r1.sleep();
-    }
-    if (!node.n.ok())
-    {
-        return 0;
-    }
-
+    if(node.init() != 0) return 1;
     double requestRate = node.getRequestRate();
     ros::Rate r(requestRate); //Frequency of publishing States
 

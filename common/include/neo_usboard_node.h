@@ -82,11 +82,9 @@ class neo_usboard_node
         // Constructor
         neo_usboard_node()
         {
-            first_setup = false;
             usboard_available = false;
             usboard_online = false;
             usboard_timeout_ = 0.5;
-            last_data_received_time = -1;
         }
 
         ~neo_usboard_node()
@@ -96,7 +94,6 @@ class neo_usboard_node
 
 
         void PublishUSBoardData();
-        void PublishStatusMessage();
         int readUSBoardData();
 
 
@@ -109,14 +106,13 @@ class neo_usboard_node
 
         void readParameter();
         double getRequestRate();
-        int last_data_received_time;
 
 
 	private:
 
         std::string m_sComPort;
         SerUSBoard * m_SerUSBoard;
-        bool first_setup;
+
         double requestRate;
         double usboard_timeout_;
 
